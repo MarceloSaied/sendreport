@@ -49,11 +49,14 @@
 #region 0)
 	StartLog()   ; init log file
 #EndRegion
+	#region parse arguments
+		#include <help.au3>
+		#include <parseArguments.au3>
+	#endregion
 	#region version number
 		$ScriptVersion="V1"
-		_FileWriteLog($logFile,'Send Report Version =' &   $ScriptVersion & @crlf)
-		ConsoleWrite('Send Report Version =' &  $ScriptVersion & @crlf)
-		_FileWriteLog($logFile,'####################################################################################' & @crlf)
+		_TeeOutput('Send Report Version =' &   $ScriptVersion ,1)
+		_TeeOutput('########################################################'  ,1)
 	#EndRegion
 	#region Check ini file
 		checkINIfile()
@@ -61,7 +64,6 @@
 
 
 ;~ 		SendMail(" STARTUP FAILED "," Database is Down" )
-
-_FileWriteLog($logFile,'End of activities' & @TAB & @TAB  & _NowCalc() & @crlf)
-_FileWriteLog($logFile,'~~~~~~~~~~~~~~~~~~~~~~      END         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' & @crlf)
-FileClose($logFile)
+	_TeeOutput('End of activities' & @TAB & @TAB  & _NowCalc()  ,1)
+	_TeeOutput('~~~~~~~~~~~~~~~~~~~~~~      END         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'  ,1)
+	FileClose($logFile)

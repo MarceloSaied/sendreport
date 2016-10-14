@@ -15,10 +15,9 @@
 
 
 
-#Region Alerting
-;~ 	$RetryFrecuencyMin= IniRead("SAP101.ini", "Mail", "RetryFrecuencyMin", "1")
-;~ 	$RetryFrecuencyMin=$RetryFrecuencyMin*60
-;~ 	$DropTimeMin= IniRead("SAP101.ini", "Mail", "DropTimeMin", "1")
-;~ 	$DropTimeMin=$DropTimeMin*60
+#Region
+	Global $FileToAtach=""
+	Global $EmailRecipient=""
+
 #EndRegion
 

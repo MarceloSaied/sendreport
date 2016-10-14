@@ -27,3 +27,4 @@ Func  CheckINIfile()  ;checks if ini file exist
 		FileWriteLine($logFile,'INI file was created with defaults. please configure it as needed' & @crlf)
 	endif
 EndFunc
+

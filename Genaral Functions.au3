@@ -8,15 +8,30 @@
 			If $iDateCalc > 0 Then Exit
 		EndIf
 	EndFunc
-
-
-
 #endregion
 #region Log
 	Func  StartLog()  ; init log file
 		$logFile=FileOpen($logFileName,2)
 		FileWriteLine($logFile,'Start of activities' & @TAB & @TAB  & _NowCalc() & @crlf)
 	EndFunc
+
+   Func _TeeOutput($CWLtext, $write2Log=0)  ; output to console an to log file
+;~ 	   ConsoleWrite('++_TeeOutput() = '& @crlf)
+   ;   Output to         console    LogFile
+   ; $write2Log = 0     xxxxx
+   ; $write2Log = 1     xxxxx        xxxxxx
+	  if $write2Log > 0 then
+		 If NOT FileExists($LogFile) Then
+			FileClose(FileOpen($LogFile, $FO_OVERWRITE)) ; Create the file if it doesn't exist.
+			ConsoleWrite("Log file created as " & $LogFile & @crlf)
+		 EndIf
+		 _FileWriteLog($logFile,$CWLtext & @crlf)
+		 ConsoleWrite($CWLtext & @crlf)
+	  Else
+		 ConsoleWrite($CWLtext & @crlf)
+	  endif
+   EndFunc
+
 #endregion
 #region Error Handeler
 	Global Const $oErrorHandler = ObjEvent("AutoIt.Error", "ObjErrorHandler")
@@ -171,5 +186,6 @@
 		endif
 	EndFunc
 #endregion
+
 
 
