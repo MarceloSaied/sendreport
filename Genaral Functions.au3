@@ -82,12 +82,8 @@
 	Func _IsFolder($sFolder)
 		Local $sAttribute = FileGetAttrib($sFolder)
 		If @error Then
-			If $SkipobtainAtributesFlag=0 Then
 ;~ 				MsgBox(4096, "Error 1053", "Could not obtain the file attributes."&@crlf&"$sFolder="&$sFolder&@crlf&"$sAttribute="&$sAttribute,0)
 				Return 0
-			else
-				Return 0
-			endif
 		endif
 		Return StringInStr($sAttribute,"D")
 	EndFunc
@@ -139,45 +135,6 @@
 	EndFunc
 #endregion
 #region Network
-	Func _ReverseDNS($IPAddress)
-		ConsoleWrite('++_ReverseDNS() = '& $IPAddress & @crlf)
-		GUICtrlSetData($LBL_Settings_DNSregistration,"DNS Registration Lookup")
-		$IPAddress = StringStripWS($IPAddress,3)
-		$sCommand="nslookup "& $IPAddress
-		$ResponseText = _GetDOSOutput($sCommand)
-		If StringInStr($ResponseText,"*** UnKnown")>0 Then
-			GUICtrlSetData($LBL_Settings_DNSregistration,"DNS Registration Lookup UnKnown")
-			Return "Unknown"
-		endif
-		GUICtrlSetState($LBL_Settings_DNSregistration,@SW_HIDE)
-		$x1 = StringInStr($ResponseText, "Name:")
-		$x2 = StringInStr($ResponseText, "Address",0,-1)
-		If $x1 = 0 or $x2 = 0 Then Return "Unknown"
-		Dim $arr[3]
-		$arr[1]=StringStripWS(StringMid($ResponseText, $x1 + 6, $x2 - $x1 - 6),3)
-		$arr[2]=StringStripWS(StringMid($ResponseText, $x2 + 8, 17),3)
-		If $x1 > 0 and $x2 > 0 Then Return $arr
-		GUICtrlSetData($LBL_Settings_DNSregistration,"DNS Registration Lookup Error")
-		Return "UnknownError"
-	EndFunc
-	Func _ReverseDNSConnector($IPAddress)
-		if $debugflag=1 then ConsoleWrite('++_ReverseDNSConnector() = '& $IPAddress & @crlf)
-		$IPAddress = StringStripWS($IPAddress,3)
-		$sCommand="nslookup "& $IPAddress
-		$ResponseText = _GetDOSOutput($sCommand)
-		if $debugflag=1 then ConsoleWrite('ResponseText = ' & $ResponseText & @crlf )
-		If StringInStr($ResponseText,"*** UnKnown")>0 Then
-			Return "Unknown"
-		endif
-		$x1 = StringInStr($ResponseText, "Name:")
-		$x2 = StringInStr($ResponseText, "Address",0,-1)
-		If $x1 = 0 or $x2 = 0 Then Return "Unknown"
-		Dim $arr[3]
-		$arr[1]=StringStripWS(StringMid($ResponseText, $x1 + 6, $x2 - $x1 - 6),3)
-		$arr[2]=StringStripWS(StringMid($ResponseText, $x2 + 8, 17),3)
-		If $x1 > 0 and $x2 > 0 Then Return $arr[2]
-		Return "UnknownError"
-	EndFunc
 	Func _GetFQDN()
 		if $debugflag=1 then ConsoleWrite('++_GetFQDN() = '& @crlf)
 		$objWMIService = ObjGet("winmgmts:{impersonationLevel = impersonate}!\\" & @ComputerName & "\root\cimv2")
@@ -196,18 +153,6 @@
 			Return SetError(3, 0, "")
 		EndIf
 	EndFunc
-	Func _GetServerDNSip()
-		if $debugflag=1 then ConsoleWrite('++_GetServerDNSip() = '& @crlf)
-		$fqdn=_GetFQDN()
-		_consolewrite("FQDN = "&$fqdn)
-		If @Compiled Then
-			$ip=_ReverseDNSConnector($fqdn)
-		Else
-			$ip=@IPAddress1
-		endif
-		_consolewrite("ServerDNSip = "&$ip)
-		Return $ip
-	EndFunc
 	Func PortCheck($SmtpServer,$px)
 		Opt('TCPTimeout', 1000)
 		TCPStartup() ;Start TCP services
@@ -224,35 +169,6 @@
 			TCPShutdown ( )
 			Return True
 		endif
-	EndFunc
-#endregion
-#region Encription
-	Func _Hashing($Password,$Hashflag=0)
-		ConsoleWrite('++_Hashing() = '& @crlf )
-			if $Hashflag=0 then
-				Local $bEncrypted = _StringEncrypt(1,$Password,$HashingPassword,1)
-			Else
-				Local $bEncrypted = _StringEncrypt(0,$Password,$HashingPassword,1)
-			EndIf
-		return $bEncrypted
-	EndFunc
-#endregion
-#region Design
-	Func _color($dato)
-;~ 		ConsoleWrite('++_color() = '& @crlf )
-		If $dato="blue" Then Return "0x0000FF"
-		If $dato="lightgreen" Then Return "0x00FF00"
-		If $dato="Darkgreen" Then Return "0x088A08"
-;~ 		If $dato="green" Then Return "0x3A5F0B"  41A317
-		If $dato="green" Then Return "0x99CC00"
-		If $dato="red" Then Return "0xFF0000"
-		If $dato="orange" Then Return "0xFF6600"
-		If $dato="yellow" Then Return "0xFFFF00"
-		If $dato="Purple" Then Return "0xFF00FF"
-		If $dato="lightblue" Then Return "0x00FFFF"
-		If $dato="black" Then Return "0x000000"
-		If $dato="white" Then Return "0xffffff"
-		If $dato="blue" Then Return "0x0000ff"
 	EndFunc
 #endregion
 
